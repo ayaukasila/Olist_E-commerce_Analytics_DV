@@ -64,7 +64,7 @@ How to Run the Project
 
 Clone repository:
 
-git clone https://github.com/yourusername/Olist-Analytics.git
+git clone https://github.com/yourusername/Data_Visualization.git
 cd Olist-Analytics
 
 
