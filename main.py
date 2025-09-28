@@ -12,7 +12,7 @@ conn = psycopg2.connect(
 queries = [
     "SELECT COUNT(*) FROM public.orders;",
     "SELECT payment_type, ROUND(AVG(payment_value),2) AS avg_payment FROM public.order_payments GROUP BY payment_type;",
-    """SELECT ct.product_category_name_english AS category, 
+    """SELECT ct.product_category_name_english AS category,  --топ-10 товарных категорий по объёму продаж.
               SUM(oi.price) AS total_sales
        FROM public.order_items oi
        JOIN public.products p ON oi.product_id = p.product_id

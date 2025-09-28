@@ -1,78 +1,124 @@
 # Data-Visualization
-Olist E-commerce Analytics
-Olist is a large Brazilian e-commerce marketplace that connects small businesses to major online platforms. The company provides sellers with infrastructure for managing products, orders, logistics, and payments.
-As a data analyst, my role is to analyze sales, payments, customer behavior, and logistics to uncover insights that support business decisions.
+## Olist E-commerce Analytics Project
 
-Project Overview
+A comprehensive data analysis and visualization project for Olist, a Brazilian e-commerce marketplace that connects small businesses with major online platforms.
 
-This project builds a PostgreSQL database from the Olist e-commerce dataset (orders, customers, sellers, payments, reviews, products)
-The goal is to perform structured analytics, create an ERD schema, and write queries to answer key business questions.
+## 📊 Project Overview
 
-The project includes:
+This project analyzes the Olist e-commerce dataset to extract valuable business insights through SQL queries, Python visualizations, and interactive dashboards.
 
-Database ERD schema with relationships 
+## 🗃️ Database Schema
 
-SQL queries 
+![ERD](images/ERD.png)
 
-Python script to run queries directly from PostgreSQL
+The database contains 9 interconnected tables:
+- `orders` - Order details and timestamps
+- `customers` - Customer demographic and location data  
+- `sellers` - Seller information
+- `products` - Product metadata and categories
+- `order_items` - Products included in orders
+- `order_payments` - Payment methods and transactions
+- `order_reviews` - Customer reviews and ratings
+- `geolocation` - Customer and seller locations
+- `category_translation` - Product categories in English
 
-Tools & Technologies
+## 🎯 Project Goals
 
-PostgreSQL 
+- Perform **sales and logistics analytics**
+- Analyze customer behavior and seller performance  
+- Visualize order statistics and delivery patterns
+- Explore product categories and review distributions
+- Create interactive dashboards and automated reports
 
-Python 3.12
+## 📁 Project Structure
+Data-Visualization/
+├── analytics.py # Main analytics script with visualizations
+├── main.py # Database connection and sample queries
+├── queries.sql # 10 analytical SQL queries
+├── schema.sql # Database table definitions
+├── data.sql # Data import commands
+├── requirements.txt # Python dependencies
+├── README.md # Project documentation
+├── charts/ # Generated visualization images
+├── exports/ # Excel reports with formatting
+├── db/ # CSV data files
+└── images/ # Diagrams and ERD
 
-psycopg2 
+## 🚀 Quick Start
 
-pandas 
+### Prerequisites
+- PostgreSQL 16+
+- Python 3.12+
+- Git
 
-SQLAlchemy
+### 1. Database Setup
 
-pgAdmin 
+# Create database
+createdb ecommerce
 
-GitHub
+# Create tables
+psql -U postgres -d ecommerce -f schema.sql
 
-Project Structure
-Olist-Analytics/
- ┣ main.py              # Python script for running SQL queries
- ┣ queries.sql          # 10 SQL queries with comments
- ┣ erd.png              # ERD diagram of the database
- ┣ README.md            # Documentation
-
-
-
-Running Python Script
-
-Install dependencies:
-
-pip install psycopg2 pandas sqlalchemy
-
-
-Run script:
-
-python3 main.py
-
-
-
-ERD Schema
-
-The ERD shows all tables (orders, order_items, products, customers, sellers, geolocation, payments, reviews, category_translation) and their relationships via primary/foreign keys.
-
-
-
-How to Run the Project
-
-Clone repository:
-
-git clone https://github.com/yourusername/Data_Visualization.git
-cd Olist-Analytics
+# Import data
+psql -U postgres -d ecommerce -f data.sql
 
 
-Set up PostgreSQL database:
 
+### 2. Database Setup
+# Install dependencies
+pip install -r requirements.txt
+
+# Run analytics
+python analytics.py
+
+### 3. Explore Queries
+# Run analytical queries
 psql -U postgres -d ecommerce -f queries.sql
 
+## 📈 Features
 
-Run Python script:
+### Data Visualizations
+The project creates 6 different types of analytical charts:
 
-python3 main.py
+- **Pie Chart**: Order status distribution
+- **Bar Chart**: Top product categories by revenue
+- **Horizontal Bar**: Average review scores by state
+- **Line Chart**: Delivery time trends over time
+- **Histogram**: Review score distribution with percentages
+- **Scatter Plot**: Price vs product weight analysis with trend lines
+
+### Interactive Dashboard
+- Time-slider visualization using Plotly
+- Animated charts showing order trends over time
+- Interactive filtering by customer state and time periods
+
+### Automated Excel Reports
+- Professional Excel exports with multiple sheets
+- Conditional formatting for numerical data
+- Frozen headers and column filters
+- Gradient color scales for better data visualization
+
+## 🔧 Technical Stack
+
+- **Database**: PostgreSQL
+- **Backend**: Python with psycopg2
+- **Data Analysis**: Pandas, NumPy
+- **Visualization**: Matplotlib, Plotly
+- **Reporting**: OpenPyXL for Excel exports
+- **Database ORM**: SQLAlchemy
+
+## 📊 Analytical Insights
+
+The project answers key business questions:
+
+- **Sales Analysis**: Top product categories by revenue and order volume
+- **Customer Insights**: Review score distribution and regional preferences
+- **Logistics**: Delivery time trends and performance metrics
+- **Payment Analysis**: Popular payment methods and average transaction values
+- **Product Analysis**: Relationship between product attributes and pricing
+
+## 🛠️ Usage
+
+### Running the Full Analytics Pipeline
+```bash
+python analytics.py
