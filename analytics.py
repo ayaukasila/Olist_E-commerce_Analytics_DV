@@ -20,22 +20,67 @@ conn = psycopg2.connect(
 
 def create_analytical_charts():
     print("Создание аналитических графиков...")
-    
-    # 1. pie chart - статусы заказов
+   # 1. pie chart с таблицей данных
     query_pie = """
-    select order_status, count(*) as total_orders
+with status_stats as (
+    select 
+        order_status,
+        count(*) as total_orders,
+        100.0 * count(*) / sum(count(*)) over() as percentage
     from orders 
-    group by order_status 
-    order by total_orders desc
-    """
+    group by order_status
+)
+select 
+    case 
+        when percentage >= 1 then order_status
+        else 'other'
+    end as status_group,
+    sum(total_orders) as total_orders,
+    round(sum(percentage), 2) as total_percentage
+from status_stats
+group by 
+    case 
+        when percentage >= 1 then order_status
+        else 'other'
+    end
+order by total_orders desc
+"""
     df_pie = pd.read_sql(query_pie, conn)
+
     plt.figure(figsize=(10, 8))
-    plt.pie(df_pie['total_orders'], labels=df_pie['order_status'], autopct='%1.1f%%', startangle=90)
-    plt.title('Распределение заказов по статусам')
+
+# ЦВЕТА ДЛЯ КАЖДОГО СТАТУСА
+    colors = {
+    'delivered': '#2E8B57',      # 🟢 Зеленый - УСПЕШНЫЕ ДОСТАВКИ
+    'shipped': '#1E90FF',        # 🔵 Синий - ОТПРАВЛЕННЫЕ
+    'processing': '#FFA500',     # 🟠 Оранжевый - В ОБРАБОТКЕ
+    'approved': '#32CD32',       # 🟢 Лаймовый - ПОДТВЕРЖДЕННЫЕ
+    'created': '#87CEEB',        # 🔵 Голубой - СОЗДАННЫЕ
+    'invoiced': '#9370DB',       # 🟣 Фиолетовый - ВЫСТАВЛЕН СЧЕТ
+    'other': '#A9A9A9'           # ⚫ Серый - ПРОЧИЕ СТАТУСЫ (<1%)
+}
+
+# Создаем список цветов для секторов в правильном порядке
+    pie_colors = [colors[status] for status in df_pie['status_group']]
+
+# Создаем подписи с процентами
+    labels = [f"{status}\n({pct}%)" for status, pct in zip(df_pie['status_group'], df_pie['total_percentage'])]
+
+    plt.pie(df_pie['total_orders'], 
+        labels=labels,
+        autopct='%1.1f%%',
+        startangle=90,
+        colors=pie_colors,
+        wedgeprops={'edgecolor': 'white', 'linewidth': 1})
+
+    plt.title('Распределение заказов по статусам\n(статусы <1% сгруппированы в "other")', 
+          fontsize=14, fontweight='bold', pad=20)
+
+    plt.tight_layout()
     plt.savefig('charts/pie_order_status.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print("Pie chart создан: распределение статусов заказов")
 
+    print("Pie chart создан: распределение статусов заказов (с группой 'other')")
     # 2. bar chart - топ категорий по выручке
     query_bar = """
     select ct.product_category_name_english as category, 
